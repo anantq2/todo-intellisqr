@@ -9,9 +9,9 @@ const apiClient = axios.create({
   },
 });
 
-// Attach token to requests if available
 apiClient.interceptors.request.use(
   (config) => {
+    // FIX: Token key ko hardcode kiya 'token' taaki mismatch na ho
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -33,6 +33,13 @@ const login = async (data: any) => {
 
 const register = async (data: any) => {
   const response = await apiClient.post('/auth/register', data);
+  
+  // ✅ FIX: Register hote hi Token save karo!
+  // Agar ye nahi karenge toh naya user "Unauthenticated" reh jayega
+  if (response.data.token) {
+    localStorage.setItem('token', response.data.token);
+  }
+  
   return response.data;
 };
 

@@ -9,7 +9,7 @@ const todoSchema = z.object({
   title: z.string().min(1, "Title is required"),
 });
 
-// GET Todos
+// GET Todos 
 router.get('/', protect, async (req: any, res, next) => {
   try {
     const todos = await Todo.find({ user: req.user.id }).sort({ createdAt: -1 });
@@ -44,7 +44,6 @@ router.put('/:id', protect, async (req: any, res, next) => {
       return;
     }
 
-    // FIX: '?' add kiya hai taaki crash na ho agar user undefined ho
     if (todo.user?.toString() !== req.user.id) {
       res.status(401).json({ message: 'Not authorized' });
       return;
@@ -72,7 +71,6 @@ router.delete('/:id', protect, async (req: any, res, next) => {
       return;
     }
 
-    // FIX: Yahan bhi '?' add kiya hai
     if (todo.user?.toString() !== req.user.id) {
       res.status(401).json({ message: 'Not authorized' });
       return;
